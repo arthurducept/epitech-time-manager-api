@@ -1,6 +1,7 @@
 'use strict';
 
 const DB = require('../db/dbConnection');
+const QueryBuilder = require('../utils/queryBuilder');
 
 exports.getUser = async function (userID) {
   var query = `SELECT username, email FROM users WHERE id = ${userID};`;
@@ -46,11 +47,36 @@ exports.createUser = async function (params) {
     return DB.connectDB().query(query, [params.username, params.email, 'NOW()', 'NOW()'], (error, result) => {
       if (error) {
         console.error(`UsersRepo : error createUser() =>  ${error}`);
-        if(error.message.includes(`duplicate key value`)) return reject(`Conflict`);
+        if (error.message.includes(`duplicate key value`)) return reject(`Conflict`);
         return reject('Error server');
       }
       var response = result.rows[0];
       return resolve(response);
+    });
+  });
+};
+
+exports.updateUser = async function (userID, params) {
+  console.log(userID, params);
+  // TODO : revoir values
+  var values = [{ column: 'updated_at', value: 'NOW()', type: 'timestamp' }];
+  if (params.username) values.push({ column: 'username', value: params.username, type: 'character varying' });
+  if (params.email) values.push({ column: 'email', value: params.email, type: 'character varying' });
+  var query = QueryBuilder.queryUpdate('users', values, ['id', 'username', 'email']);
+  return new Promise((resolve, reject) => {
+    return DB.connectDB().query(query, [...values.map((val) => val.value), userID], (error, result) => {
+      if (error && error.message.includes(`duplicate key value`)) {
+        console.error(`UsersRepo : updateUser() =>  ${error}`);
+        return reject('Conflict');
+      }
+      if (error) {
+        console.error(`UsersRepo : error updateUser() =>  ${error}`);
+        return reject('Error server');
+      }
+      if (result.rows.length < 1) return reject('Not found');
+      return resolve(result.rows[0]);
+      // var response = result.rows[0];
+      // return resolve(response);
     });
   });
 };

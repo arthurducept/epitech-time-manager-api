@@ -25,7 +25,7 @@ var Users = require('../service/UsersService');
 
 module.exports.getUser = function getUser(c, req, res) {
   if (!c.request.params.userID) return getError(res, 'Bad request');
-  if (c.request.params.userID) var userID = c.request.params.userID;
+  else var userID = c.request.params.userID;
   Users.getUser(userID)
     .then(function (response) {
       utils.writeJson(res, response, 200);
@@ -53,14 +53,32 @@ module.exports.getUsers = function getUsers(c, req, res) {
 module.exports.createUser = function createUser(c, req, res) {
   var params = {};
   if (!c.request.body.username || !c.request.body.email) return getError(res, 'Bad request');
-  
+
   // TODO : ajouter champs
   if (c.request.body.username) params.username = c.request.body.username;
   if (c.request.body.email) params.email = c.request.body.email;
-  
+
   if (!params.email.match(/^[\w-]+@[\w-]+\.[\w]+$/g)) return getError(res, 'Bad request');
 
   Users.createUser(params)
+    .then(function (response) {
+      utils.writeJson(res, response, 201);
+    })
+    .catch(function (response) {
+      getError(res, response);
+    });
+};
+
+module.exports.updateUser = function createUser(c, req, res) {
+  var params = {};
+
+  if (!c.request.params.userID) return getError(res, 'Bad request');
+  else var userID = c.request.params.userID;
+
+  if (c.request.body) var params = c.request.body;
+  if (params.email && !c.request.body.email.match(/^[\w-]+@[\w-]+\.[\w]+$/g)) return getError(res, 'Bad request');
+  
+  Users.updateUser(userID, params)
     .then(function (response) {
       utils.writeJson(res, response, 201);
     })

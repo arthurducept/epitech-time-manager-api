@@ -45,6 +45,17 @@ module.exports.router = {
     return Users.createUser(c, req, res);
   },
 
+  /**
+   * PUT /users/{userID}
+   * @param {*} c
+   * @param {*} req
+   * @param {*} res
+   */
+   updateUser: async (c, req, res) => {
+    const Users = require('./controllers/Users');
+    return Users.updateUser(c, req, res);
+  },
+
   // /**
   //  * GET /cases/{idCase}/customers
   //  * @param {*} c

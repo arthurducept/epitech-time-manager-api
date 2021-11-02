@@ -20,6 +20,10 @@ exports.createUser = async function(params) {
   return UsersRepo.createUser(params);
 };
 
+exports.updateUser = async function(userID, params) {
+  return UsersRepo.updateUser(userID, params);
+};
+
 
 
 // exports.createCase = async function(userLogged, body) {
