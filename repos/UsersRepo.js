@@ -57,7 +57,6 @@ exports.createUser = async function (params) {
 };
 
 exports.updateUser = async function (userID, params) {
-  console.log(userID, params);
   // TODO : revoir values
   var values = [{ column: 'updated_at', value: 'NOW()', type: 'timestamp' }];
   if (params.username) values.push({ column: 'username', value: params.username, type: 'character varying' });
@@ -75,8 +74,20 @@ exports.updateUser = async function (userID, params) {
       }
       if (result.rows.length < 1) return reject('Not found');
       return resolve(result.rows[0]);
-      // var response = result.rows[0];
-      // return resolve(response);
+    });
+  });
+};
+
+exports.deleteUser = async function (userID) {
+  var query = `DELETE FROM users WHERE id = ${userID};`
+  return new Promise((resolve, reject) => {
+    return DB.connectDB().query(query, (error, result) => {
+      if (error) {
+        console.error(`UsersRepo : error deleteUser() =>  ${error}`);
+        return reject('Error server');
+      }
+      if (result.rowCount < 1) return reject('Not found');
+      return resolve(result.rows[0]);
     });
   });
 };

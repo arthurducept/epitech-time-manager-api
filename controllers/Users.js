@@ -69,7 +69,7 @@ module.exports.createUser = function createUser(c, req, res) {
     });
 };
 
-module.exports.updateUser = function createUser(c, req, res) {
+module.exports.updateUser = function updateUser(c, req, res) {
   var params = {};
 
   if (!c.request.params.userID) return getError(res, 'Bad request');
@@ -81,6 +81,19 @@ module.exports.updateUser = function createUser(c, req, res) {
   Users.updateUser(userID, params)
     .then(function (response) {
       utils.writeJson(res, response, 201);
+    })
+    .catch(function (response) {
+      getError(res, response);
+    });
+};
+
+module.exports.deleteUser = function deleteUser(c, req, res) {
+  if (!c.request.params.userID) return getError(res, 'Bad request');
+  else var userID = c.request.params.userID;
+
+  Users.deleteUser(userID)
+    .then(function (response) {
+      utils.writeJson(res, response, 204);
     })
     .catch(function (response) {
       getError(res, response);

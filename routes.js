@@ -51,9 +51,20 @@ module.exports.router = {
    * @param {*} req
    * @param {*} res
    */
-   updateUser: async (c, req, res) => {
+  updateUser: async (c, req, res) => {
     const Users = require('./controllers/Users');
     return Users.updateUser(c, req, res);
+  },
+
+  /**
+   * DELETE /users/{userID}
+   * @param {*} c
+   * @param {*} req
+   * @param {*} res
+   */
+  deleteUser: async (c, req, res) => {
+    const Users = require('./controllers/Users');
+    return Users.deleteUser(c, req, res);
   },
 
   // /**

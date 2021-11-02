@@ -24,6 +24,11 @@ exports.updateUser = async function(userID, params) {
   return UsersRepo.updateUser(userID, params);
 };
 
+exports.deleteUser = async function(userID) {
+  return UsersRepo.deleteUser(userID);
+};
+
+
 
 
 // exports.createCase = async function(userLogged, body) {
