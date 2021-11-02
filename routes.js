@@ -23,16 +23,27 @@ module.exports.router = {
     return Users.getUsers(c, req, res);
   },
 
-  // /**
-  //  * POST /cases
-  //  * @param {*} c
-  //  * @param {*} req
-  //  * @param {*} res
-  //  */
-  // createCase: async(c, req, res) => {
-  //   const Cases = require('./controllers/Cases');
-  //   return Cases.createCase(c, req, res);
-  // },
+  /**
+   * GET /users/${userID}
+   * @param {*} c
+   * @param {*} req
+   * @param {*} res
+   */
+  getUser: async (c, req, res) => {
+    const Users = require('./controllers/Users');
+    return Users.getUser(c, req, res);
+  },
+
+  /**
+   * POST /users
+   * @param {*} c
+   * @param {*} req
+   * @param {*} res
+   */
+  createUser: async (c, req, res) => {
+    const Users = require('./controllers/Users');
+    return Users.createUser(c, req, res);
+  },
 
   // /**
   //  * GET /cases/{idCase}/customers

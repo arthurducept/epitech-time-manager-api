@@ -1,57 +1,55 @@
 var utils = require('../utils/writer.js');
 
 /**
- * 
- * @param {*} res 
- * @param {*} response 
- * @param {*} code 
+ *
+ * @param {*} res
+ * @param {*} response
+ * @param {*} code
  */
 module.exports.getError = function getError(res, response) {
+  console.error(response);
 
-  console.error(response)
-
-  var responseInsensitive = response.toString().toLowerCase()
+  var responseInsensitive = response.toString().toLowerCase();
 
   switch (responseInsensitive) {
-    case "bad request":
+    case 'bad request':
       return utils.writeJson(res, response, 400);
       break;
-    case "Bad request":
+    case 'Bad request':
       return utils.writeJson(res, response, 400);
       break;
-    case "unauthorized":
+    case 'unauthorized':
       return utils.writeJson(res, response, 401);
       break;
-    case "Unauthorized":
+    case 'Unauthorized':
       return utils.writeJson(res, response, 401);
       break;
-    case "forbidden":
+    case 'forbidden':
       return utils.writeJson(res, response, 403);
       break;
-    case "Forbidden":
+    case 'Forbidden':
       return utils.writeJson(res, response, 403);
       break;
-    case "not found":
+    case 'not found':
       return utils.writeJson(res, response, 404);
       break;
-    case "Not found":
+    case 'Not found':
       return utils.writeJson(res, response, 404);
       break;
-    case "conflict":
+    case 'conflict':
       return utils.writeJson(res, response, 409);
       break;
-    case "Conflict":
+    case 'Conflict':
       return utils.writeJson(res, response, 409);
       break;
-    case "error server":
+    case 'error server':
       return utils.writeJson(res, response, 500);
       break;
-    case "Error server":
+    case 'Error server':
       return utils.writeJson(res, response, 500);
       break;
     default:
       return utils.writeJson(res, response, 500);
       break;
   }
-
 };

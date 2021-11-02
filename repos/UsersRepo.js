@@ -1,24 +1,59 @@
 'use strict';
 
 const DB = require('../db/dbConnection');
-const QueryBuilder = require('../utils/queryBuilder');
 
-
-exports.getUsers = async function () {
-    var query = 'SELECT * FROM users';
-    return new Promise((resolve, reject) => {
-      return DB.connectDB().query(query, (error, result) => {
-        if (error) {
-          console.error(`CasesRepo : error getUsers() =>  ${error}`);
-          return reject('Error server');
-        }
-        if (result.rows.length < 1) return reject('Not found');
-        var response = result.rows;
-        return resolve(response);
-      });
+exports.getUser = async function (userID) {
+  var query = `SELECT username, email FROM users WHERE id = ${userID};`;
+  return new Promise((resolve, reject) => {
+    return DB.connectDB().query(query, (error, result) => {
+      if (error) {
+        console.error(`UsersRepo : error getUser() =>  ${error}`);
+        return reject('Error server');
+      }
+      if (result.rows.length < 1) return reject('Not found');
+      var response = result.rows[0];
+      return resolve(response);
     });
-  };
+  });
+};
 
+exports.getUsers = async function (params) {
+  var query = 'SELECT username, email FROM users ';
+  if (Object.keys(params).length != 0) {
+    query += 'WHERE ';
+    for (var key in params) {
+      if (params.hasOwnProperty(key)) query += `${key} ILIKE '%${params[key]}%' AND `;
+    }
+    query = query.substring(0, query.length - 4);
+  }
+  query += 'ORDER BY id ASC;';
+  return new Promise((resolve, reject) => {
+    return DB.connectDB().query(query, (error, result) => {
+      if (error) {
+        console.error(`UsersRepo : error getUsers() =>  ${error}`);
+        return reject('Error server');
+      }
+      if (result.rows.length < 1) return reject('Not found');
+      var response = result.rows;
+      return resolve(response);
+    });
+  });
+};
+
+exports.createUser = async function (params) {
+  var query = `INSERT INTO users(username, email, inserted_at, updated_at) VALUES ($1, $2, $3, $4)`;
+  return new Promise((resolve, reject) => {
+    return DB.connectDB().query(query, [params.username, params.email, 'NOW()', 'NOW()'], (error, result) => {
+      if (error) {
+        console.error(`UsersRepo : error createUser() =>  ${error}`);
+        if(error.message.includes(`duplicate key value`)) return reject(`Conflict`);
+        return reject('Error server');
+      }
+      var response = result.rows[0];
+      return resolve(response);
+    });
+  });
+};
 
 // exports.createCase = async function (body, customerA, customerB, dateCreation, stateStartCase) {
 //   var values = [
@@ -74,7 +109,7 @@ exports.getUsers = async function () {
 //   var values = [];
 //   var index = 1;
 //   var query = `
-//   SELECT cases.id, 
+//   SELECT cases.id,
 //   type_status.id AS id_status, type_status.name AS status_name,
 //   id_prescriber, sinister_number, email_jurist, details,
 //   customer_a.id AS id_customer_a,

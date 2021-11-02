@@ -23,20 +23,46 @@ var Users = require('../service/UsersService');
 //   }
 // };
 
+module.exports.getUser = function getUser(c, req, res) {
+  if (!c.request.params.userID) return getError(res, 'Bad request');
+  if (c.request.params.userID) var userID = c.request.params.userID;
+  Users.getUser(userID)
+    .then(function (response) {
+      utils.writeJson(res, response, 200);
+    })
+    .catch(function (response) {
+      getError(res, response);
+    });
+};
+
 module.exports.getUsers = function getUsers(c, req, res) {
   var params = {};
-
-//   if (c.request.query.idCase) params.idCase = c.request.query.idCase;
-//   if (c.request.query.idCustomer) params.idCustomer = c.request.query.idCustomer;
-//   if (c.request.query.lastName) params.lastName = c.request.query.lastName;
-//   if (c.request.query.sortBy) params.sortBy = c.request.query.sortBy;
-//   if (c.request.query.orderBy) params.orderBy = c.request.query.orderBy;
-//   if (c.request.query.limit) params.limit = c.request.query.limit;
-//   if (c.request.query.offset) params.offset = c.request.query.offset;
+  // TODO : ajouter champs
+  if (c.request.query.username) params.username = c.request.query.username;
+  if (c.request.query.email) params.email = c.request.query.email;
 
   Users.getUsers(params)
     .then(function (response) {
       utils.writeJson(res, response, 200);
+    })
+    .catch(function (response) {
+      getError(res, response);
+    });
+};
+
+module.exports.createUser = function createUser(c, req, res) {
+  var params = {};
+  if (!c.request.body.username || !c.request.body.email) return getError(res, 'Bad request');
+  
+  // TODO : ajouter champs
+  if (c.request.body.username) params.username = c.request.body.username;
+  if (c.request.body.email) params.email = c.request.body.email;
+  
+  if (!params.email.match(/^[\w-]+@[\w-]+\.[\w]+$/g)) return getError(res, 'Bad request');
+
+  Users.createUser(params)
+    .then(function (response) {
+      utils.writeJson(res, response, 201);
     })
     .catch(function (response) {
       getError(res, response);

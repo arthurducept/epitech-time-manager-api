@@ -8,9 +8,18 @@ const UsersRepo = require('../repos/UsersRepo');
 // const { getCaseStatus } = require('../repos/StatusRepo');
 // const { getUTCHoursWithoutDST } = require('../utils/slots');
 
-exports.getUsers = async function() {
-  return UsersRepo.getUsers();
+exports.getUser = async function(userID) {
+  return UsersRepo.getUser(userID);
 };
+
+exports.getUsers = async function(params) {
+  return UsersRepo.getUsers(params);
+};
+
+exports.createUser = async function(params) {
+  return UsersRepo.createUser(params);
+};
+
 
 
 // exports.createCase = async function(userLogged, body) {
