@@ -1,0 +1,550 @@
+openapi: 3.0.0
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/DmeGroupe/Gotham_API/1.0.0
+info:
+  description: API pour le time manager de Gotham
+  version: '1.0.0'
+  title: Gotham API
+  contact:
+    email: killia.banchereau@epitech.eu
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+
+security:
+  - JWT-token: []
+
+paths:
+  /authorization:
+    post:
+      tags:
+        - Authorization
+      summary: Authorisation API
+      operationId: Authorization_RequestToken
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Auth'
+      responses:
+        '201':
+          description: Jeton d'authentification
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+              x-nullable: true
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+      security:
+        - APIKEY-Gotham: []
+
+  /users:
+    get:
+      tags:
+        - Users
+      operationId: getUsers
+      summary: Récupérer les utilisateurs
+      parameters:
+        - name: username
+          in: query
+          description: Username
+          required: false
+          x-nulable: true
+          schema:
+            type: string
+            example: 'batman'
+        - name: email
+          in: query
+          description: Email
+          required: false
+          x-nulable: true
+          schema:
+            type: string
+            example: 'batman@gotham.com'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUsers'
+              x-nullable: true
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+    post:
+      tags:
+        - Users
+      summary: Créer un user
+      operationId: createUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostUser'
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+
+  /users/{userID}:
+    get:
+      tags:
+        - Users
+      operationId: getUser
+      summary: Récupérer un utilisateur
+      parameters:
+        - name: userID
+          in: path
+          description: Id de l'utilisateur
+          required: true
+          x-nullable: false
+          schema:
+            type: integer
+            example: 666
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUser'
+              x-nullable: true
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+
+    put:
+      tags:
+        - Users
+      operationId: updateUser
+      summary: Modifier un utilisateur
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostUser'
+      parameters:
+        - name: userID
+          in: path
+          description: Id de l'utilisateur
+          required: true
+          x-nullable: false
+          schema:
+            type: integer
+            example: 666
+      responses:
+        '201':
+          description: Updated
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+
+    delete:
+      tags:
+        - Users
+      operationId: deleteUser
+      summary: Supprimer un utilisateur
+      parameters:
+        - name: userID
+          in: path
+          description: Id de l'utilisateur
+          required: true
+          x-nullable: false
+          schema:
+            type: integer
+            example: 666
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+
+  /workingtimes/{userID}:
+    get:
+      tags:
+        - Working Times
+      operationId: getUserWorkingtimes
+      summary: Récupérer les heures d'un utilisateur
+      parameters:
+        - name: userID
+          in: path
+          description: Id de l'utilisateur
+          required: true
+          x-nullable: false
+          schema:
+            type: integer
+            example: 666
+        - name: start
+          in: query
+          description: Début
+          required: false
+          x-nullable: true
+          schema:
+            type: string
+            example: 'YYYY-MM-DD HH:MM:SS'
+        - name: end
+          in: query
+          description: Fin
+          required: false
+          x-nullable: true
+          schema:
+            type: string
+            example: 'YYYY-MM-DD HH:MM:SS'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetWorkingTimes'
+              x-nullable: true
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+
+    post:
+      tags:
+        - Working Times
+      operationId: PostUserWorkingtimes
+      summary: Poster les heures d'un utilisateur
+      parameters:
+        - name: userID
+          in: path
+          description: Id de l'utilisateur
+          required: true
+          x-nullable: false
+          schema:
+            type: integer
+            example: 666
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostUserWorkingtimes'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUser'
+              x-nullable: true
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+
+  /workingtimes/{userID}/{id}:
+    get:
+      tags:
+        - Working Times
+      operationId: getUserWorkingtime
+      summary: Récupérer une heure d'un utilisateur
+      parameters:
+        - name: userID
+          in: path
+          description: Id de l'utilisateur
+          required: true
+          x-nullable: false
+          schema:
+            type: integer
+            example: 666
+        - name: id
+          in: path
+          description: Id du working time
+          required: true
+          x-nullable: false
+          schema:
+            type: integer
+            example: 1349
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetWorkingTime'
+              x-nullable: true
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+
+  /workingtimes/{id}:
+    put:
+      tags:
+        - Working Times
+      operationId: updateWorkingtime
+      summary: Modifier une heure
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostUserWorkingtimes'
+      parameters:
+        - name: id
+          in: path
+          description: Id du working time
+          required: true
+          x-nullable: false
+          schema:
+            type: integer
+            example: 1349
+      responses:
+        '201':
+          description: Updated
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+
+    delete:
+      tags:
+        - Working Times
+      operationId: deleteWorkingtime
+      summary: Supprimer une heure
+      parameters:
+        - name: id
+          in: path
+          description: Id du working time
+          required: true
+          x-nullable: false
+          schema:
+            type: integer
+            example: 1349
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+
+  /clocks/{userID}:
+    get:
+      tags:
+        - Clocks
+      operationId: getUserClock
+      summary: Récupérer la clock d'un utilisateur
+      parameters:
+        - name: userID
+          in: path
+          description: Id de l'utilisateur
+          required: true
+          x-nullable: false
+          schema:
+            type: integer
+            example: 666
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUserClock'
+              x-nullable: true
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+
+    post:
+      tags:
+        - Clocks
+      operationId: PostUserClock
+      summary: Permet à l'utilisateur de pointer
+      parameters:
+        - name: userID
+          in: path
+          description: Id de l'utilisateur
+          required: true
+          x-nullable: false
+          schema:
+            type: integer
+            example: 666
+      responses:
+        '201':
+          description: Updated
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+
+components:
+  securitySchemes:
+    JWT-token:
+      description: Using /api/Authorization to get token <br>AND Copy 'Bearer ' + valid JWT token into field
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+    APIKEY-Gotham:
+      type: apiKey
+      name: APIKEY-Gotham
+      in: header
+
+  schemas:
+    Auth:
+      type: object
+      properties:
+        username:
+          description: Nom d'utilisateur
+          type: string
+          example: 'batman'
+        password:
+          description: Mot de passe
+          type: string
+          example: 'imvengeance'
+
+    Token:
+      type: object
+      properties:
+        token:
+          type: string
+
+    GetUser:
+      type: object
+      properties:
+        username:
+          type: string
+          example: 'batman'
+        email:
+          type: string
+          example: 'batman@gotham.com'
+
+    GetUsers:
+      type: array
+      items:
+        type: object
+        properties:
+          username:
+            type: string
+            example: 'batman'
+          email:
+            type: string
+            example: 'batman@gotham.com'
+
+    GetWorkingTime:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1349
+        start:
+          type: string
+          example: 'YYYY-MM-DD HH:MM:SS'
+        end:
+          type: string
+          example: 'YYYY-MM-DD HH:MM:SS'
+
+    GetWorkingTimes:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+            example: 456
+          start:
+            type: string
+            example: 'YYYY-MM-DD HH:MM:SS'
+          end:
+            type: string
+            example: 'YYYY-MM-DD HH:MM:SS'
+
+    GetUserClock:
+      type: object
+      properties:
+        time:
+          type: string
+          example: 'YYYY-MM-DD HH:MM:SS'
+        status:
+          type: boolean
+          example: true
+
+    PostUser:
+      type: object
+      properties:
+        username:
+          type: string
+          example: 'batman'
+        email:
+          type: string
+          example: 'batman@gotham.com'
+
+    PostUserWorkingtimes:
+      type: object
+      properties:
+        start:
+          type: string
+          example: 'YYYY-MM-DD HH:MM:SS'
+        end:
+          type: string
+          example: 'YYYY-MM-DD HH:MM:SS'

@@ -1,0 +1,36 @@
+{
+  "name": "mediation-api",
+  "version": "1.0.0",
+  "description": "API for mediation",
+  "main": "index.js",
+  "scripts": {
+    "prestart": "npm install",
+    "start": "nodemon index.js"
+  },
+  "keywords": [
+    "swagger",
+    "mediation",
+    "api"
+  ],
+  "license": "Unlicense",
+  "private": true,
+  "dependencies": {
+    "axios": "^0.21.4",
+    "connect": "^3.2.0",
+    "cors": "^2.8.5",
+    "cron": "^1.8.2",
+    "custom-env": "^2.0.1",
+    "express": "^4.17.1",
+    "googleapis": "^87.0.0",
+    "js-yaml": "^3.3.0",
+    "jsonwebtoken": "^8.5.1",
+    "jwks-rsa": "^1.12.2",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.14",
+    "oas3-tools": "^2.2.2",
+    "openapi-backend": "^3.9.0",
+    "openapi-client-axios": "^3.11.2",
+    "pg": "^8.6.0",
+    "sib-api-v3-sdk": "^8.2.1"
+  }
+}

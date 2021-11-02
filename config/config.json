@@ -1,0 +1,49 @@
+{
+  "sendinblue_sender": {
+    "name": "Juliette d'Avoloi",
+    "email": "mediation_test@avoloi.com"
+  },
+  "cron_reminder_delays": {
+    "fail_call": 168,
+    "part_a_progression": {
+      "text_message": 24,
+      "phone_call": 48
+    },
+    "part_b_progression": {
+      "second_mail": 48,
+      "text_message": 72,
+      "second_text_message": 96,
+      "phone_call": 120
+    },
+    "part_a_exploration_meeting": {
+      "second_mail": 48,
+      "phone_call": 72,
+      "fail_a_exploration": 168
+    },
+    "part_b_exploration_meeting": {
+      "second_mail": 48,
+      "phone_call": 72,
+      "fail_b_exploration": 168
+    },
+    "part_a_individual_meeting": {
+      "second_mail": 48,
+      "phone_call": 72,
+      "fail_a_individual": 168
+    },
+    "part_b_individual_meeting": {
+      "second_mail": 48,
+      "phone_call": 72,
+      "fail_b_individual": 168
+    },
+    "part_a_group_meeting": {
+      "second_mail": 48,
+      "phone_call": 72,
+      "fail_a_group": 168
+    },
+    "part_b_group_meeting": {
+      "second_mail": 48,
+      "phone_call": 72,
+      "fail_b_group": 168
+    }
+  }
+}
