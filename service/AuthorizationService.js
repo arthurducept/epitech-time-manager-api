@@ -4,28 +4,27 @@ const jwt = require('jsonwebtoken');
 const AuthRepo = require('../repos/AuthRepo');
 
 /**
- * Fonction permettant d'authentifier un customer grâce à son code et son nom de famille
- * @param {String} code - Code e-billet du customer
- * @param {String} name - 3 premières lettres du nom de famille
- * @returns Token
+ *
+ * @param {*} email
+ * @param {*} password
+ * @returns
  */
-exports.authorizationRequestToken = async function (code) {
-  // code = code.toUpperCase();
-  // var credentials = await new Promise((resolve, reject) => {
-  //   return AuthRepo.getCredentials(code)
-  //     .then((response) => {
-  //       return resolve(response);
-  //     })
-  //     .catch((error) => {
-  //       return reject(error);
-  //     });
-  // });
+exports.authorizationRequestToken = async function (email, password) {
+  var credentials = await new Promise((resolve, reject) => {
+    return AuthRepo.getCredentials(email, password)
+      .then((response) => {
+        if (email != response.email) return reject('Unauthorized');
+        return resolve(response);
+      })
+      .catch((error) => {
+        return reject(error);
+      });
+  });
 
-  var tokenPayload = await {
+  var tokenPayload = {
     exp: Math.floor(Date.now() / 1000) + parseInt(process.env.TOKEN_EXPIRES_IN),
-    // idCase: parseInt(credentials.id_case),
-    // idCustomer: parseInt(credentials.id_customer),
-    // whichPart: parseInt(credentials.id_customer) == parseInt(credentials.id_customer_a) ? 'A' : 'B',
+    id: parseInt(credentials.id),
+    role: String(credentials.role),
   };
 
   return new Promise((resolve, reject) => {

@@ -148,7 +148,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PostUser'
+              $ref: '#/components/schemas/UpdateUser'
       parameters:
         - name: userID
           in: path
@@ -185,8 +185,8 @@ paths:
             type: integer
             example: 666
       responses:
-        '204':
-          description: No content
+        '200':
+          description: OK
         '400':
           description: Bad Request
         '401':
@@ -454,10 +454,10 @@ components:
     Auth:
       type: object
       properties:
-        username:
-          description: Nom d'utilisateur
+        email:
+          description: Email d'utilisateur
           type: string
-          example: 'batman'
+          example: 'batman@gotham.com'
         password:
           description: Mot de passe
           type: string
@@ -472,24 +472,44 @@ components:
     GetUser:
       type: object
       properties:
+        firstname:
+          type: string
+          example: 'Bruce'
+        lastname:
+          type: string
+          example: 'Wayne'
         username:
           type: string
           example: 'batman'
         email:
           type: string
           example: 'batman@gotham.com'
+        role:
+          type: string
+          example: 'Administrator'
+          enum: ['Administrator', 'Super Manager', 'Manager', 'Employee']
 
     GetUsers:
       type: array
       items:
         type: object
         properties:
+          firstname:
+            type: string
+            example: 'Bruce'
+          lastname:
+            type: string
+            example: 'Wayne'
           username:
             type: string
             example: 'batman'
           email:
             type: string
             example: 'batman@gotham.com'
+          role:
+            type: string
+            example: 'Administrator'
+            enum: ['Administrator', 'Super Manager', 'Manager', 'Employee']
 
     GetWorkingTime:
       type: object
@@ -528,7 +548,30 @@ components:
         status:
           type: boolean
           example: true
-
+          
+    UpdateUser:
+      type: object
+      properties:
+        firstname:
+          type: string
+          example: 'Bruce'
+        lastname:
+          type: string
+          example: 'Wayne'
+        username:
+          type: string
+          example: 'batman'
+        email:
+          type: string
+          example: 'batman@gotham.com'
+        password:
+          type: string
+          example: 'ec0e2603172c73a8b644bb9456c1ff6e'
+        role:
+          type: integer
+          example: 0
+          enum: [0, 1, 2, 3]
+    
     PostUser:
       type: object
       properties:
@@ -538,6 +581,13 @@ components:
         email:
           type: string
           example: 'batman@gotham.com'
+        password:
+          type: string
+          example: 'ec0e2603172c73a8b644bb9456c1ff6e'
+        role:
+          type: integer
+          example: 0
+          enum: [0, 1, 2, 3]
 
     PostUserWorkingtimes:
       type: object

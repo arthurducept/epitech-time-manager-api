@@ -1,12 +1,6 @@
 'use strict';
 require('custom-env').env();
 
-/**
- * Liste de choses à faire :
- * // TODO : Faire des vérifications des inputs dans les controllers (ne pas utiliser openAPI uniquement)
- * // NOTE : Pour l'instant, le sub_mediator ainsi que l'id du calendrier google ne sont pas variabilisés.
- */
-
 const OpenAPIBackend = require('openapi-backend').default;
 const path = require('path');
 const express = require('express');
@@ -61,10 +55,8 @@ api.register(routes.router);
 
 api.init();
 
-// use as express middleware
 app.use((req, res) => api.handleRequest(req, req, res));
 
-// start server
 app.listen(process.env.PORT, () => {
   console.info('Environnement : %s', process.env.NODE_ENV);
   console.info('API listening at %d', process.env.PORT);
