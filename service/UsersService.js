@@ -2,7 +2,6 @@
 
 const UsersRepo = require('../repos/UsersRepo');
 
-const RolesRepo = require('../repos/RolesRepo');
 exports.getUser = async function (userID) {
   return UsersRepo.getUser(userID);
 };

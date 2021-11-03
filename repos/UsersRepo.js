@@ -42,7 +42,6 @@ exports.getUsers = async function (params) {
 };
 
 exports.createUser = async function (params) {
-  console.log(params);
   var query = `INSERT INTO users(username, email, password, role, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6)`;
   return new Promise((resolve, reject) => {
     return DB.connectDB().query(query, [params.username, params.email, params.password, params.role, 'NOW()', 'NOW()'], (error, result) => {
@@ -95,9 +94,9 @@ exports.updateUser = async function (userID, params) {
 };
 
 exports.deleteUser = async function (userID) {
-  var query = `DELETE FROM users WHERE id = ${userID};`;
+  var query = `DELETE FROM users WHERE id = $1;`;
   return new Promise((resolve, reject) => {
-    return DB.connectDB().query(query, (error, result) => {
+    return DB.connectDB().query(query, [userID], (error, result) => {
       if (error) {
         console.error(`UsersRepo : error deleteUser() =>  ${error}`);
         return reject('Error server');

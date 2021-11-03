@@ -22,10 +22,8 @@ module.exports.getUser = function getUser(c, req, res) {
 
 module.exports.getUsers = function getUsers(c, req, res) {
   var params = {};
-  // TODO : ajouter champs
   if (c.request.query.username) params.username = c.request.query.username;
   if (c.request.query.email) params.email = c.request.query.email;
-
   Users.getUsers(params)
     .then(function (response) {
       utils.writeJson(res, response, 200);

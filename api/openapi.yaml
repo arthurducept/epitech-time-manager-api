@@ -247,7 +247,7 @@ paths:
     post:
       tags:
         - Working Times
-      operationId: PostUserWorkingtimes
+      operationId: postUserWorkingtimes
       summary: Poster les heures d'un utilisateur
       parameters:
         - name: userID
@@ -414,7 +414,7 @@ paths:
     post:
       tags:
         - Clocks
-      operationId: PostUserClock
+      operationId: postUserClock
       summary: Permet à l'utilisateur de pointer
       parameters:
         - name: userID
