@@ -22,7 +22,7 @@ exports.getUserWorkingtimes = async function (userID) {
 exports.postUserWorkingtimes = async function (userID, params) {
   var query = `INSERT INTO workingtimes(start, "end", "user", shift, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6)`;
   return new Promise((resolve, reject) => {
-    return DB.connectDB().query(query, [params.start, params.end, userID, 1, 'NOW()', 'NOW()'], (error, result) => {
+    return DB.connectDB().query(query, [params.start, params.end, userID, 1, new Date(), new Date()], (error, result) => {
       if (error && error.message.includes(`violates foreign key`)) {
         console.error(`WorkingtimesRepo : postUserWorkingtimes() =>  ${error}`);
         return reject('Bad request');
@@ -55,7 +55,7 @@ exports.getUserWorkingtime = async function (userID, id) {
 };
 
 exports.updateWorkingtime = async function (id, params) {
-  var values = [{ column: 'updated_at', value: 'NOW()', type: 'timestamp' }];
+  var values = [{ column: 'updated_at', value: new Date(), type: 'timestamp' }];
   if (params.start) values.push({ column: 'start', value: params.start, type: 'timestamp without time zone' });
   if (params.end) values.push({ column: '"end"', value: params.end, type: 'timestamp without time zone' });
   var query = QueryBuilder.queryUpdate('workingtimes', values, ['id', 'start', '"end"']);

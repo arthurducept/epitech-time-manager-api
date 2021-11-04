@@ -7,10 +7,12 @@ var Users = require('../service/UsersService');
 module.exports.getUser = function getUser(c, req, res) {
   if (!c.request.params.userID) return getError(res, 'Bad request');
   else var userID = c.request.params.userID;
-  // var base64 = c.request.headers.authorization.replace(/Bearer /, '').split('.')[1];
-  // var buffer = new Buffer.from(base64, 'base64');
-  // var decodedToken = JSON.parse(buffer.toString('ascii'));
-  // if (decodedToken.role == 'Employee') if (userID != decodedToken.id) return getError(res, 'Unauthorized');
+
+  var base64 = c.request.headers.authorization.replace(/Bearer /, '').split('.')[1];
+  var buffer = new Buffer.from(base64, 'base64');
+  var decodedToken = JSON.parse(buffer.toString('ascii'));
+  if (decodedToken.role == 'Employee') if (userID != decodedToken.id) return getError(res, 'Unauthorized');
+
   Users.getUser(userID)
     .then(function (response) {
       utils.writeJson(res, response, 200);
@@ -74,6 +76,11 @@ module.exports.updateUser = function updateUser(c, req, res) {
 module.exports.deleteUser = function deleteUser(c, req, res) {
   if (!c.request.params.userID) return getError(res, 'Bad request');
   else var userID = c.request.params.userID;
+
+  var base64 = c.request.headers.authorization.replace(/Bearer /, '').split('.')[1];
+  var buffer = new Buffer.from(base64, 'base64');
+  var decodedToken = JSON.parse(buffer.toString('ascii'));
+  if (decodedToken.role == 'Employee') return getError(res, 'Unauthorized');
 
   Users.deleteUser(userID)
     .then(function (response) {

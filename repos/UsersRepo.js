@@ -44,7 +44,7 @@ exports.getUsers = async function (params) {
 exports.createUser = async function (params) {
   var query = `INSERT INTO users(username, email, password, role, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6)`;
   return new Promise((resolve, reject) => {
-    return DB.connectDB().query(query, [params.username, params.email, params.password, params.role, 'NOW()', 'NOW()'], (error, result) => {
+    return DB.connectDB().query(query, [params.username, params.email, params.password, params.role, new Date(), new Date()], (error, result) => {
       if (error && error.message.includes(`duplicate key value`)) {
         console.error(`UsersRepo : updateUser() =>  ${error}`);
         return reject('Conflict');
@@ -65,7 +65,7 @@ exports.createUser = async function (params) {
 };
 
 exports.updateUser = async function (userID, params) {
-  var values = [{ column: 'updated_at', value: 'NOW()', type: 'timestamp' }];
+  var values = [{ column: 'updated_at', value: new Date(), type: 'timestamp' }];
   if (params.firstname) values.push({ column: 'firstname', value: params.firstname, type: 'character varying' });
   if (params.lastname) values.push({ column: 'lastname', value: params.lastname, type: 'character varying' });
   if (params.username) values.push({ column: 'username', value: params.username, type: 'character varying' });

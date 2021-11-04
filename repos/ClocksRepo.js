@@ -21,7 +21,7 @@ exports.getUserClock = async function (userID) {
 exports.createUserClock = async function (userID) {
   var query = `INSERT INTO clocks(time, status, "user", created_at, updated_at) VALUES ($1, $2, $3, $4, $5) RETURNING "user", time, status`;
   return new Promise((resolve, reject) => {
-    return DB.connectDB().query(query, ['NOW()', true, userID, 'NOW()', 'NOW()'], (error, result) => {
+    return DB.connectDB().query(query, [new Date(), true, userID, new Date(), new Date()], (error, result) => {
       if (error && error.message.includes(`violates foreign key`)) {
         console.error(`ClocksRepo : createUserClock() =>  ${error}`);
         return reject('Bad request');
@@ -44,7 +44,6 @@ exports.updateUserClock = async function (userID, status, date) {
   values.push({ column: 'status', value: status, type: 'boolean' });
 
   var query = QueryBuilder.queryUpdate('clocks', values, ['"user"', 'time', 'status'], '"user"');
-  console.log(query);
   return new Promise((resolve, reject) => {
     return DB.connectDB().query(query, [...values.map((val) => val.value), userID], (error, result) => {
       if (error && error.message.includes(`duplicate key value`)) {

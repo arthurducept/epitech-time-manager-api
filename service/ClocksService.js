@@ -19,6 +19,6 @@ exports.postUserClock = async function (userID) {
       };
       WorkingtimesRepo.postUserWorkingtimes(userID, params);
       return ClocksRepo.updateUserClock(userID, false, date);
-    } else return ClocksRepo.updateUserClock(userID, true);
+    } else return ClocksRepo.updateUserClock(userID, true, new Date());
   }
 };
