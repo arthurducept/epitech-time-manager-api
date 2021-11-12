@@ -4,7 +4,10 @@ const DB = require('../db/dbConnection');
 const QueryBuilder = require('../utils/queryBuilder');
 
 exports.getUser = async function (userID) {
-  var query = `SELECT firstname, lastname, username, email, roles.name as role FROM users INNER JOIN roles ON users.role = roles.id WHERE users.id = $1;`;
+  var query = `SELECT users.id, firstname, lastname, username, email, roles.name as role, clocks.status FROM users 
+  INNER JOIN roles ON users.role = roles.id 
+  LEFT JOIN clocks ON users.id = clocks.user
+  WHERE users.id = $1;`;
   return new Promise((resolve, reject) => {
     return DB.connectDB().query(query, [userID], (error, result) => {
       if (error) {
@@ -19,7 +22,9 @@ exports.getUser = async function (userID) {
 };
 
 exports.getUsers = async function (params) {
-  var query = 'SELECT firstname, lastname, username, email, roles.name as role FROM users INNER JOIN roles ON users.role = roles.id ';
+  var query = `SELECT users.id, firstname, lastname, username, email, roles.name as role, clocks.status FROM users 
+  INNER JOIN roles ON users.role = roles.id 
+  LEFT JOIN clocks ON users.id = clocks.user `;
   if (Object.keys(params).length != 0) {
     query += 'WHERE ';
     for (var key in params) {
@@ -42,9 +47,9 @@ exports.getUsers = async function (params) {
 };
 
 exports.createUser = async function (params) {
-  var query = `INSERT INTO users(username, email, password, role, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6)`;
+  var query = `INSERT INTO users(firstname, lastname, username, email, password, role, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`;
   return new Promise((resolve, reject) => {
-    return DB.connectDB().query(query, [params.username, params.email, params.password, params.role, new Date(), new Date()], (error, result) => {
+    return DB.connectDB().query(query, [params.firstname, params.lastname, params.username, params.email, params.password, params.role, new Date(), new Date()], (error, result) => {
       if (error && error.message.includes(`duplicate key value`)) {
         console.error(`UsersRepo : updateUser() =>  ${error}`);
         return reject('Conflict');

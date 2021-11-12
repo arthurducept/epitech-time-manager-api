@@ -3,8 +3,12 @@
 const DB = require('../db/dbConnection');
 const QueryBuilder = require('../utils/queryBuilder');
 
-exports.getUserWorkingtimes = async function (userID) {
-  var query = `SELECT workingtimes.id, workingtimes.start, workingtimes.end, shifts.name as shift FROM workingtimes INNER JOIN shifts ON workingtimes.shift = shifts.id WHERE workingtimes.user = $1;`;
+exports.getUserWorkingtimes = async function (userID, params) {
+  var query = `SELECT workingtimes.id, workingtimes.start, workingtimes.end, shifts.name as shift FROM workingtimes INNER JOIN shifts ON workingtimes.shift = shifts.id WHERE workingtimes.user = $1 `;
+  if (params.start && !params.end) query += `AND start >= '${params.start}' ORDER BY start ASC;`;
+  if (params.end && !params.start) query += `AND workingtimes.end <= '${params.end}' ORDER BY start ASC;`;
+  if (params.start && params.end) query += `AND start >= '${params.start}' AND workingtimes.end <= '${params.end}' ORDER BY start ASC;`;
+  if (!params.start && !params.end) query += `ORDER BY start DESC;`;
   return new Promise((resolve, reject) => {
     return DB.connectDB().query(query, [userID], (error, result) => {
       if (error) {
@@ -82,7 +86,7 @@ exports.updateWorkingtime = async function (id, params) {
 exports.deleteWorkingtime = async function (id) {
   var query = `DELETE FROM workingtimes WHERE id = $1;`;
   return new Promise((resolve, reject) => {
-    return DB.connectDB().query(query, [id],(error, result) => {
+    return DB.connectDB().query(query, [id], (error, result) => {
       if (error) {
         console.error(`WorkingtimesRepo : error deleteWorkingtime() =>  ${error}`);
         return reject('Error server');

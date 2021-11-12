@@ -2,8 +2,8 @@
 
 const WorkingtimesRepo = require('../repos/WorkingtimesRepo');
 
-exports.getUserWorkingtimes = async function (userID) {
-  return WorkingtimesRepo.getUserWorkingtimes(userID);
+exports.getUserWorkingtimes = async function (userID, params) {
+  return WorkingtimesRepo.getUserWorkingtimes(userID, params);
 };
 
 exports.postUserWorkingtimes = async function (userID, params) {

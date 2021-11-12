@@ -20,7 +20,7 @@ exports.authorizationRequestToken = async function (email, password) {
         return reject(error);
       });
   });
-
+  console.log(credentials);
   var tokenPayload = {
     exp: Math.floor(Date.now() / 1000) + parseInt(process.env.TOKEN_EXPIRES_IN),
     id: parseInt(credentials.id),

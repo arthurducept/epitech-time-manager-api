@@ -36,10 +36,16 @@ module.exports.getUsers = function getUsers(c, req, res) {
 };
 
 module.exports.createUser = function createUser(c, req, res) {
+  var base64 = c.request.headers.authorization.replace(/Bearer /, '').split('.')[1];
+  var buffer = new Buffer.from(base64, 'base64');
+  var decodedToken = JSON.parse(buffer.toString('ascii'));
+  if (decodedToken.role == 'Employee')return getError(res, 'Unauthorized');
+
   var params = {};
-  if (!c.request.body.username || !c.request.body.email || !c.request.body.password || !c.request.body.role) return getError(res, 'Bad request');
-  // TODO : ajouter champs
+  if (!c.request.body.lastname || !c.request.body.firstname || !c.request.body.username || !c.request.body.email || !c.request.body.password || !c.request.body.role) return getError(res, 'Bad request');
   if (c.request.body.username) params.username = c.request.body.username;
+  if (c.request.body.lastname) params.lastname = c.request.body.lastname;
+  if (c.request.body.firstname) params.firstname = c.request.body.firstname;
   if (c.request.body.email) params.email = c.request.body.email;
   if (c.request.body.password) params.password = c.request.body.password;
   if (c.request.body.role) params.role = c.request.body.role;
@@ -60,6 +66,11 @@ module.exports.updateUser = function updateUser(c, req, res) {
 
   if (!c.request.params.userID) return getError(res, 'Bad request');
   else var userID = c.request.params.userID;
+
+  var base64 = c.request.headers.authorization.replace(/Bearer /, '').split('.')[1];
+  var buffer = new Buffer.from(base64, 'base64');
+  var decodedToken = JSON.parse(buffer.toString('ascii'));
+  if (decodedToken.role == 'Employee') if (userID != decodedToken.id) return getError(res, 'Unauthorized');
 
   if (c.request.body) var params = c.request.body;
   if (params.email && !c.request.body.email.match(/^[\w-]+@[\w-]+\.[\w]+$/g)) return getError(res, 'Bad request');

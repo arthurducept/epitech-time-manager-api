@@ -11,9 +11,12 @@ var Workingtimes = require('../service/WorkingtimesService');
 // 22 - 7 heures de nuit 2
 
 module.exports.getUserWorkingtimes = function getUserWorkingtimes(c, req, res) {
+  var params = {};
+  if (c.request.query.start) params.start = c.request.query.start;
+  if (c.request.query.end) params.end = c.request.query.end;
   if (!c.request.params.userID) return getError(res, 'Bad request');
   else var userID = c.request.params.userID;
-  Workingtimes.getUserWorkingtimes(userID)
+  Workingtimes.getUserWorkingtimes(userID, params)
     .then(function (response) {
       utils.writeJson(res, response, 200);
     })
@@ -30,6 +33,12 @@ module.exports.postUserWorkingtimes = function postUserWorkingtimes(c, req, res)
     params.start = c.request.body.start;
     params.end = c.request.body.end;
   }
+
+  var base64 = c.request.headers.authorization.replace(/Bearer /, '').split('.')[1];
+  var buffer = new Buffer.from(base64, 'base64');
+  var decodedToken = JSON.parse(buffer.toString('ascii'));
+  if (decodedToken.role == 'Employee')return getError(res, 'Unauthorized');
+
   if (params.start >= params.end) return getError(res, 'Bad request');
   var regex = /^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) (0[0-9]|1[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$/g;
   if (!params.start.match(regex)) return getError(res, 'Bad request');
@@ -60,6 +69,11 @@ module.exports.getUserWorkingtime = function getUserWorkingtime(c, req, res) {
 
 module.exports.updateWorkingtime = function updateWorkingtime(c, req, res) {
 
+  var base64 = c.request.headers.authorization.replace(/Bearer /, '').split('.')[1];
+  var buffer = new Buffer.from(base64, 'base64');
+  var decodedToken = JSON.parse(buffer.toString('ascii'));
+  if (decodedToken.role == 'Employee')return getError(res, 'Unauthorized');
+  
   if (!c.request.params.id) return getError(res, 'Bad request');
   else var id = c.request.params.id;
 

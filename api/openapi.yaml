@@ -570,7 +570,7 @@ components:
         role:
           type: integer
           example: 0
-          enum: [0, 1, 2, 3]
+          enum: [0, 1, 2, 3, 4, 5]
     
     PostUser:
       type: object
@@ -587,7 +587,7 @@ components:
         role:
           type: integer
           example: 0
-          enum: [0, 1, 2, 3]
+          enum: [0, 1, 2, 3, 4, 5]
 
     PostUserWorkingtimes:
       type: object
